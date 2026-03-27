@@ -62,7 +62,7 @@ export default function AdminDashboard() {
                         console.log(currentToken, "asss")
                         if (currentToken) {
                             console.log('Got FCM token, sending to backend...');
-                            await axios.post(`http://localhost:5000/api/auth/fcm-token/${user._id}`, {
+                            await axios.post(`https://0168-2406-7400-10a-1b0b-6b1a-3649-9501-1c57.ngrok-free.app/api/auth/fcm-token/${user._id}`, {
                                 fcmToken: currentToken
                             });
                         } else {
@@ -90,7 +90,7 @@ export default function AdminDashboard() {
 
     const fetchZones = async () => {
         try {
-            const response = await axios.get('http://localhost:5000/api/zones');
+            const response = await axios.get('https://0168-2406-7400-10a-1b0b-6b1a-3649-9501-1c57.ngrok-free.app/api/zones');
             setZones(response.data);
         } catch (error) {
             console.error('Error fetching zones:', error);
@@ -112,8 +112,8 @@ export default function AdminDashboard() {
 
         try {
             const url = editingZoneId
-                ? `http://localhost:5000/api/zones/${editingZoneId}`
-                : 'http://localhost:5000/api/zones';
+                ? `https://0168-2406-7400-10a-1b0b-6b1a-3649-9501-1c57.ngrok-free.app/api/zones/${editingZoneId}`
+                : 'https://0168-2406-7400-10a-1b0b-6b1a-3649-9501-1c57.ngrok-free.app/api/zones';
 
             if (editingZoneId) {
                 await axios.put(url, geofenceData);
@@ -143,7 +143,7 @@ export default function AdminDashboard() {
         if (!window.confirm("Are you sure you want to delete this zone?")) return;
 
         try {
-            await axios.delete(`http://localhost:5000/api/zones/${id}`);
+            await axios.delete(`https://0168-2406-7400-10a-1b0b-6b1a-3649-9501-1c57.ngrok-free.app/api/zones/${id}`);
             alert('Zone deleted successfully!');
             fetchZones();
         } catch (error) {

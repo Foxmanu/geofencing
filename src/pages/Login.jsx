@@ -13,7 +13,7 @@ export default function Login() {
         setError('');
 
         try {
-            const response = await fetch('https://0168-2406-7400-10a-1b0b-6b1a-3649-9501-1c57.ngrok-free.app/api/auth/login', {
+            const response = await fetch('https://0168-2406-https://549b-2406-7400-10a-1b0b-6b1a-3649-9501-1c57.ngrok-free.app7400-10a-1b0b-6b1a-3649-9501-1c57.ngrok-free.app/api/auth/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

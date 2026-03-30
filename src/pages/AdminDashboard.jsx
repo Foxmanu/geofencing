@@ -37,7 +37,7 @@ export default function AdminDashboard() {
     const navigate = useNavigate();
     // Default position: center of a generic map
     const [position, setPosition] = useState({ lat: 51.505, lng: -0.09 });
-    const [radius, setRadius] = useState(500); // meters
+    const [radius, setRadius] = useState(10); // meters
     const [zoneName, setZoneName] = useState('');
     const [zones, setZones] = useState([]);
     const [editingZoneId, setEditingZoneId] = useState(null);
@@ -155,6 +155,27 @@ export default function AdminDashboard() {
             alert('Server error deleting zone');
         }
     };
+       const handleLogout = async () => {
+        const userStr = localStorage.getItem('user');
+        const user = userStr ? JSON.parse(userStr) : null;
+
+        if (user?._id) {
+            try {
+                await fetch('https://6efe-2406-7400-10a-1b0b-82d6-e84e-7fc2-2782.ngrok-free.app/api/auth/logout', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ id: user._id })
+                });
+            } catch (err) {
+                console.error('Logout request failed', err);
+            }
+        }
+
+        localStorage.removeItem('user');
+        localStorage.removeItem('role');
+        navigate('/login');
+    };
+
 
     return (
         <div className="layout-container">
@@ -195,7 +216,7 @@ export default function AdminDashboard() {
                             <label>Radius (meters): <strong>{radius}m</strong></label>
                             <input
                                 type="range"
-                                min="100" max="5000" step="100"
+                                min="10" max="5000" step="10"
                                 value={radius}
                                 onChange={(e) => setRadius(parseInt(e.target.value))}
                                 className="slider"
@@ -242,8 +263,8 @@ export default function AdminDashboard() {
                 </div>
 
                 <div className="sidebar-footer">
-                    <button onClick={() => navigate('/login')} className="btn-logout">
-                        <LogOut size={18} /> Logout
+                    <button onClick={handleLogout} className="btn-logout">
+                        <LogOut size={18}  /> Logout
                     </button>
                 </div>
             </aside>

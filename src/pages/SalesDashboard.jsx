@@ -33,7 +33,7 @@ export default function SalesDashboard() {
             setErrorMsg('');
 
             try {
-                const response = await fetch(`https://4952-2406-7400-10a-1b0b-5c50-f35e-3820-2dce.ngrok-free.app /api/auth/location/${user._id}`, {
+                const response = await fetch(`https://4952-2406-7400-10a-1b0b-5c50-f35e-3820-2dce.ngrok-free.app/api/auth/location/${user._id}`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json'

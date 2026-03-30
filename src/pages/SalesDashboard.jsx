@@ -95,7 +95,7 @@ export default function SalesDashboard() {
 
         if (user?._id) {
             try {
-                await fetch('https://6efe-2406-7400-10a-1b0b-82d6-e84e-7fc2-2782.ngrok-free.app /api/auth/logout', {
+                await fetch('https://6efe-2406-7400-10a-1b0b-82d6-e84e-7fc2-2782.ngrok-free.app/api/auth/logout', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ id: user._id })

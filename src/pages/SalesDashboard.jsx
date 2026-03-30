@@ -33,7 +33,7 @@ export default function SalesDashboard() {
             setErrorMsg('');
 
             try {
-                const response = await fetch(`https://5da6-2406-7400-10a-1b0b-6b1a-3649-9501-1c57.ngrok-free.app/api/auth/location/${user._id}`, {
+                const response = await fetch(`https://6efe-2406-7400-10a-1b0b-82d6-e84e-7fc2-2782.ngrok-free.app/api/auth/location/${user._id}`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json'
@@ -95,7 +95,7 @@ export default function SalesDashboard() {
 
         if (user?._id) {
             try {
-                await fetch('https://5da6-2406-7400-10a-1b0b-6b1a-3649-9501-1c57.ngrok-free.app/api/auth/logout', {
+                await fetch('https://6efe-2406-7400-10a-1b0b-82d6-e84e-7fc2-2782.ngrok-free.app /api/auth/logout', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ id: user._id })

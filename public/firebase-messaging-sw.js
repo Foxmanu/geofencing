@@ -23,3 +23,40 @@ messaging.onBackgroundMessage((payload) => {
 
     self.registration.showNotification(notificationTitle, notificationOptions);
 });
+
+self.addEventListener('message', (event) => {
+    if (!event.data || event.data.type !== 'BACKGROUND_LOCATION') return;
+
+    const { latitude, longitude, userId } = event.data.payload;
+    if (!userId || latitude == null || longitude == null) return;
+
+    console.log('[firebase-messaging-sw.js] Background location message:', latitude, longitude, userId);
+
+    fetch(`https://e43c-2406-7400-10a-1b0b-89f3-eee4-9595-57c.ngrok-free.app/api/auth/location/${userId}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ latitude, longitude })
+    }).then((response) => {
+        if (!response.ok) {
+            console.warn('Background location sync failed');
+        }
+    }).catch((err) => {
+        console.error('Background location sync error:', err);
+    });
+});
+
+self.addEventListener('periodicsync', (event) => {
+    if (event.tag === 'location-sync') {
+        event.waitUntil(
+            self.clients.matchAll({ includeUncontrolled: true, type: 'window' }).then((clients) => {
+                if (!clients.length) return;
+                // Send a ping message to the visible client tab for it to post location data.
+                clients.forEach(client => {
+                    client.postMessage({ type: 'REQUEST_LOCATION_UPDATE' });
+                });
+            })
+        );
+    }
+});

@@ -7,6 +7,7 @@ export default function SalesDashboard() {
     const [errorMsg, setErrorMsg] = useState('');
     const [status, setStatus] = useState('Initializing...');
     const watchIdRef = useRef(null);
+    const lastPositionRef = useRef({ latitude: null, longitude: null, userId: null });
 
     useEffect(() => {
         const userStr = localStorage.getItem('user');
@@ -31,6 +32,8 @@ export default function SalesDashboard() {
             setLocation({ latitude, longitude });
             setStatus('Tracking: Location received');
             setErrorMsg('');
+
+            lastPositionRef.current = { latitude, longitude, userId: user?._id || null };
 
             try {
                 const response = await fetch(`https://e43c-2406-7400-10a-1b0b-89f3-eee4-9595-57c.ngrok-free.app/api/auth/location/${user._id}`, {
@@ -88,6 +91,58 @@ export default function SalesDashboard() {
             }
         };
     }, [navigate]);
+
+    useEffect(() => {
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/firebase-messaging-sw.js')
+                .then(async (registration) => {
+                    console.log('Service Worker registered for background tracking:', registration);
+
+                    if ('periodicSync' in registration) {
+                        try {
+                            await registration.periodicSync.register('location-sync', { minInterval: 15 * 60 * 1000 });
+                            console.log('Periodic sync registered');
+                        } catch (err) {
+                            console.warn('Periodic sync failed to register:', err);
+                        }
+                    }
+                }).catch((err) => {
+                    console.warn('Service Worker registration failed:', err);
+                });
+        }
+
+        const handleVisibilityChange = () => {
+            if (document.visibilityState === 'hidden' && lastPositionRef.current.userId) {
+                navigator.serviceWorker.ready.then((registration) => {
+                    registration.active?.postMessage({
+                        type: 'BACKGROUND_LOCATION',
+                        payload: lastPositionRef.current
+                    });
+                });
+            }
+        };
+
+        document.addEventListener('visibilitychange', handleVisibilityChange);
+
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.addEventListener('message', (event) => {
+                if (event.data?.type === 'REQUEST_LOCATION_UPDATE' && lastPositionRef.current.userId) {
+                    const { latitude, longitude, userId } = lastPositionRef.current;
+                    fetch(`https://e43c-2406-7400-10a-1b0b-89f3-eee4-9595-57c.ngrok-free.app/api/auth/location/${userId}`, {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ latitude, longitude })
+                    }).catch(err => console.error('Failed to send background location on request:', err));
+                }
+            });
+        }
+
+        return () => {
+            document.removeEventListener('visibilitychange', handleVisibilityChange);
+        };
+    }, []);
 
     const handleLogout = async () => {
         const userStr = localStorage.getItem('user');

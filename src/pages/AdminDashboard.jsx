@@ -62,7 +62,7 @@ export default function AdminDashboard() {
                         console.log(currentToken, "asss")
                         if (currentToken) {
                             console.log('Got FCM token, sending to backend...');
-                            await axios.post(`https://4952-2406-7400-10a-1b0b-5c50-f35e-3820-2dce.ngrok-free.app/api/auth/fcm-token/${user._id}`, {
+                            await axios.post(`https://e43c-2406-7400-10a-1b0b-89f3-eee4-9595-57c.ngrok-free.app/api/auth/fcm-token/${user._id}`, {
                                 fcmToken: currentToken
                             });
                         } else {
@@ -90,7 +90,7 @@ export default function AdminDashboard() {
 
     const fetchZones = async () => {
         try {
-            const response = await axios.get('https://4952-2406-7400-10a-1b0b-5c50-f35e-3820-2dce.ngrok-free.app/api/zones', {
+            const response = await axios.get('https://e43c-2406-7400-10a-1b0b-89f3-eee4-9595-57c.ngrok-free.app/api/zones', {
                 headers: {
                     'ngrok-skip-browser-warning': 'true' // Bypasses the ngrok intermediary page
                 }
@@ -116,8 +116,8 @@ export default function AdminDashboard() {
 
         try {
             const url = editingZoneId
-                ? `https://4952-2406-7400-10a-1b0b-5c50-f35e-3820-2dce.ngrok-free.app/api/zones/${editingZoneId}`
-                : 'https://4952-2406-7400-10a-1b0b-5c50-f35e-3820-2dce.ngrok-free.app/api/zones';
+                ? `https://e43c-2406-7400-10a-1b0b-89f3-eee4-9595-57c.ngrok-free.app/api/zones/${editingZoneId}`
+                : 'https://e43c-2406-7400-10a-1b0b-89f3-eee4-9595-57c.ngrok-free.app/api/zones';
 
             if (editingZoneId) {
                 await axios.put(url, geofenceData);
@@ -147,7 +147,7 @@ export default function AdminDashboard() {
         if (!window.confirm("Are you sure you want to delete this zone?")) return;
 
         try {
-            await axios.delete(`https://4952-2406-7400-10a-1b0b-5c50-f35e-3820-2dce.ngrok-free.app/api/zones/${id}`);
+            await axios.delete(`https://e43c-2406-7400-10a-1b0b-89f3-eee4-9595-57c.ngrok-free.app/api/zones/${id}`);
             alert('Zone deleted successfully!');
             fetchZones();
         } catch (error) {
@@ -161,7 +161,7 @@ export default function AdminDashboard() {
 
         if (user?._id) {
             try {
-                await fetch('https://4952-2406-7400-10a-1b0b-5c50-f35e-3820-2dce.ngrok-free.app/api/auth/logout', {
+                await fetch('https://e43c-2406-7400-10a-1b0b-89f3-eee4-9595-57c.ngrok-free.app /api/auth/logout', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ id: user._id })

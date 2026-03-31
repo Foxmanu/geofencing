@@ -216,7 +216,7 @@ export default function AdminDashboard() {
                             <label>Radius (meters): <strong>{radius}m</strong></label>
                             <input
                                 type="range"
-                                min="10" max="5000" step="10"
+                                min="5" max="5000" step="3"
                                 value={radius}
                                 onChange={(e) => setRadius(parseInt(e.target.value))}
                                 className="slider"
@@ -280,11 +280,19 @@ export default function AdminDashboard() {
                     <LocationMarker position={position} setPosition={setPosition} />
 
                     {position && (
-                        <Circle
-                            center={position}
-                            radius={radius}
-                            pathOptions={{ color: '#4f46e5', fillColor: '#4f46e5', fillOpacity: 0.2 }}
-                        />
+                        <>
+                            <Circle
+                                center={position}
+                                radius={radius}
+                                pathOptions={{ color: '#4f46e5', fillColor: '#4f46e5', fillOpacity: 0.2 }}
+                            />
+                            {/* Small center marker to visually align the point with circle center */}
+                            <Circle
+                                center={position}
+                                radius={0.5}
+                                pathOptions={{ color: '#1d4ed8', fillColor: '#1d4ed8', fillOpacity: 1, weight: 0 }}
+                            />
+                        </>
                     )}
 
                     {zones.map(zone => (

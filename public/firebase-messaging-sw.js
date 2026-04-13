@@ -32,7 +32,7 @@ self.addEventListener('message', (event) => {
 
     console.log('[firebase-messaging-sw.js] Background location message:', latitude, longitude, userId);
 
-    fetch(`https://e43c-2406-7400-10a-1b0b-89f3-eee4-9595-57c.ngrok-free.app/api/auth/location/${userId}`, {
+    fetch(`/api/auth/location/${userId}`, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json'

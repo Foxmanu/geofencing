@@ -86,9 +86,11 @@ export default function AdminDashboard() {
     const fetchZones = async () => {
         try {
             const response = await axios.get('http://localhost:5000/api/zones', {
+                method: 'GET',
                 headers: {
-                    'ngrok-skip-browser-warning': 'true' // Bypasses the ngrok intermediary page
-                }
+                    'Content-Type': 'application/json',
+                },
+
             });
             setZones(response.data);
         } catch (error) {

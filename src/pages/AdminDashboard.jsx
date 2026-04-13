@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { MapContainer, TileLayer, Circle, useMapEvents, Marker } from 'react-leaflet';
+import { MapContainer, TileLayer, Circle, CircleMarker, useMapEvents } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import { MapPin, Save, LogOut, Trash2, Edit } from 'lucide-react';
 import '../index.css';
@@ -10,15 +10,6 @@ import '../index.css';
 import { getToken, onMessage } from 'firebase/messaging';
 import { messaging } from '../firebase';
 
-// Fix for default marker icon in leaflet
-import L from 'leaflet';
-import icon from 'leaflet/dist/images/marker-icon.png';
-import iconShadow from 'leaflet/dist/images/marker-shadow.png';
-let DefaultIcon = L.icon({
-    iconUrl: icon,
-    shadowUrl: iconShadow
-});
-L.Marker.prototype.options.icon = DefaultIcon;
 
 // Component to handle map clicks for setting geofence center
 function LocationMarker({ position, setPosition }) {
@@ -29,7 +20,11 @@ function LocationMarker({ position, setPosition }) {
     });
 
     return position === null ? null : (
-        <Marker position={position}></Marker>
+        <CircleMarker
+            center={position}
+            radius={8}
+            pathOptions={{ color: '#1d4ed8', fillColor: '#1d4ed8', fillOpacity: 1, weight: 2 }}
+        />
     );
 }
 
@@ -62,7 +57,7 @@ export default function AdminDashboard() {
                         console.log(currentToken, "asss")
                         if (currentToken) {
                             console.log('Got FCM token, sending to backend...');
-                            await axios.post(`https://e43c-2406-7400-10a-1b0b-89f3-eee4-9595-57c.ngrok-free.app/api/auth/fcm-token/${user._id}`, {
+                            await axios.post(`http://localhost:5000/api/auth/fcm-token/${user._id}`, {
                                 fcmToken: currentToken
                             });
                         } else {
@@ -90,7 +85,7 @@ export default function AdminDashboard() {
 
     const fetchZones = async () => {
         try {
-            const response = await axios.get('https://e43c-2406-7400-10a-1b0b-89f3-eee4-9595-57c.ngrok-free.app/api/zones', {
+            const response = await axios.get('http://localhost:5000/api/zones', {
                 headers: {
                     'ngrok-skip-browser-warning': 'true' // Bypasses the ngrok intermediary page
                 }
@@ -116,8 +111,8 @@ export default function AdminDashboard() {
 
         try {
             const url = editingZoneId
-                ? `https://e43c-2406-7400-10a-1b0b-89f3-eee4-9595-57c.ngrok-free.app/api/zones/${editingZoneId}`
-                : 'https://e43c-2406-7400-10a-1b0b-89f3-eee4-9595-57c.ngrok-free.app/api/zones';
+                ? `http://localhost:5000/api/zones/${editingZoneId}`
+                : 'http://localhost:5000/api/zones';
 
             if (editingZoneId) {
                 await axios.put(url, geofenceData);
@@ -147,7 +142,7 @@ export default function AdminDashboard() {
         if (!window.confirm("Are you sure you want to delete this zone?")) return;
 
         try {
-            await axios.delete(`https://e43c-2406-7400-10a-1b0b-89f3-eee4-9595-57c.ngrok-free.app/api/zones/${id}`);
+            await axios.delete(`http://localhost:5000/api/zones/${id}`);
             alert('Zone deleted successfully!');
             fetchZones();
         } catch (error) {
@@ -155,13 +150,13 @@ export default function AdminDashboard() {
             alert('Server error deleting zone');
         }
     };
-       const handleLogout = async () => {
+    const handleLogout = async () => {
         const userStr = localStorage.getItem('user');
         const user = userStr ? JSON.parse(userStr) : null;
 
         if (user?._id) {
             try {
-                await fetch('https://e43c-2406-7400-10a-1b0b-89f3-eee4-9595-57c.ngrok-free.app /api/auth/logout', {
+                await fetch('http://localhost:5000/api/auth/logout', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ id: user._id })
@@ -264,7 +259,7 @@ export default function AdminDashboard() {
 
                 <div className="sidebar-footer">
                     <button onClick={handleLogout} className="btn-logout">
-                        <LogOut size={18}  /> Logout
+                        <LogOut size={18} /> Logout
                     </button>
                 </div>
             </aside>
@@ -280,19 +275,11 @@ export default function AdminDashboard() {
                     <LocationMarker position={position} setPosition={setPosition} />
 
                     {position && (
-                        <>
-                            <Circle
-                                center={position}
-                                radius={radius}
-                                pathOptions={{ color: '#4f46e5', fillColor: '#4f46e5', fillOpacity: 0.2 }}
-                            />
-                            {/* Small center marker to visually align the point with circle center */}
-                            <Circle
-                                center={position}
-                                radius={0.5}
-                                pathOptions={{ color: '#1d4ed8', fillColor: '#1d4ed8', fillOpacity: 1, weight: 0 }}
-                            />
-                        </>
+                        <Circle
+                            center={position}
+                            radius={radius}
+                            pathOptions={{ color: '#4f46e5', fillColor: '#4f46e5', fillOpacity: 0.2 }}
+                        />
                     )}
 
                     {zones.map(zone => (

@@ -85,7 +85,7 @@ export default function AdminDashboard() {
 
     const fetchZones = async () => {
         try {
-            const response = await axios.get('http://localhost:5000/api/zones', {
+            const response = await axios.get('https://9520-2406-7400-10a-8a15-bbeb-5a4d-c89-cd8c.ngrok-free.app/api/zones', {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -113,8 +113,8 @@ export default function AdminDashboard() {
 
         try {
             const url = editingZoneId
-                ? `http://localhost:5000/api/zones/${editingZoneId}`
-                : 'http://localhost:5000/api/zones';
+                ? `https://9520-2406-7400-10a-8a15-bbeb-5a4d-c89-cd8c.ngrok-free.app/api/zones/${editingZoneId}`
+                : 'https://9520-2406-7400-10a-8a15-bbeb-5a4d-c89-cd8c.ngrok-free.app/api/zones';
 
             if (editingZoneId) {
                 await axios.put(url, geofenceData);

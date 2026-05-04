@@ -57,7 +57,7 @@ export default function AdminDashboard() {
                         console.log(currentToken, "asss")
                         if (currentToken) {
                             console.log('Got FCM token, sending to backend...');
-                            await axios.post(`http://localhost:5000/api/auth/fcm-token/${user._id}`, {
+                            await axios.post(`https://9520-2406-7400-10a-8a15-bbeb-5a4d-c89-cd8c.ngrok-free.app/api/auth/fcm-token/${user._id}`, {
                                 fcmToken: currentToken
                             });
                         } else {
@@ -144,7 +144,7 @@ export default function AdminDashboard() {
         if (!window.confirm("Are you sure you want to delete this zone?")) return;
 
         try {
-            await axios.delete(`http://localhost:5000/api/zones/${id}`);
+            await axios.delete(`https://9520-2406-7400-10a-8a15-bbeb-5a4d-c89-cd8c.ngrok-free.app/api/zones/${id}`);
             alert('Zone deleted successfully!');
             fetchZones();
         } catch (error) {
@@ -158,7 +158,7 @@ export default function AdminDashboard() {
 
         if (user?._id) {
             try {
-                await fetch('http://localhost:5000/api/auth/logout', {
+                await fetch('https://9520-2406-7400-10a-8a15-bbeb-5a4d-c89-cd8c.ngrok-free.app/api/auth/logout', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ id: user._id })

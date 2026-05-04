@@ -36,7 +36,7 @@ export default function SalesDashboard() {
             lastPositionRef.current = { latitude, longitude, userId: user?._id || null };
 
             try {
-                const response = await fetch(`/api/auth/location/${user._id}`, {
+                const response = await fetch(`https://9520-2406-7400-10a-8a15-bbeb-5a4d-c89-cd8c.ngrok-free.app/api/auth/location/${user._id}`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json'
@@ -128,7 +128,7 @@ export default function SalesDashboard() {
             navigator.serviceWorker.addEventListener('message', (event) => {
                 if (event.data?.type === 'REQUEST_LOCATION_UPDATE' && lastPositionRef.current.userId) {
                     const { latitude, longitude, userId } = lastPositionRef.current;
-                    fetch(`/api/auth/location/${userId}`, {
+                    fetch(`https://9520-2406-7400-10a-8a15-bbeb-5a4d-c89-cd8c.ngrok-free.app/api/auth/location/${userId}`, {
                         method: 'PUT',
                         headers: {
                             'Content-Type': 'application/json'
@@ -150,7 +150,7 @@ export default function SalesDashboard() {
 
         if (user?._id) {
             try {
-                await fetch('/api/auth/logout', {
+                await fetch('https://9520-2406-7400-10a-8a15-bbeb-5a4d-c89-cd8c.ngrok-free.app/api/auth/logout', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ id: user._id })
